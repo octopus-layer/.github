@@ -12,7 +12,7 @@ As Near is very strong as a consensus and settlement layer, Near Multichain crea
 
 Decentralized networks cannot provide full privace without using ZK snark proofs. However, ZK snark proofs are quite complicated to integrate and ofter costly to generate. Moreover, even though the verification time of a snark proof is always constant, the proof size may increase TX costs significantly. In order to solve this issue, a method called proof aggregation can be utilized, where multiple ZK proofs are recursively combined together and proved at once. As ZK snark proofs are always verified in constant time, recursively combining proofs do not increase time costs. However, aggregated proof generation takes significant time in the client side, and thus affects the UX of a ZK application.
 
-o1js is a ZK snark proof generation framework in JS ([npm package](https://www.npmjs.com/package/o1js)) commonly used in Mina blockchain. As it is a essentially JS, it can be used in all machines supporting wasm. Moreover, o1js uses Plonk proofs on top of a layer called Pickles, which is responsible for proof recursion. As a result, proof aggregation is very light in o1js. Developers may easily use o1js to create complex recursive ZK proofs.
+o1js is a ZK snark proof generation framework in JS ([npm package](https://www.npmjs.com/package/o1js)) commonly used in Mina blockchain. As it is essentially JS, it can be used in all machines supporting wasm. Moreover, o1js uses Plonk proofs on top of a layer called Pickles, which is responsible for proof recursion. As a result, proof aggregation is very light in o1js. Developers may easily use o1js to create complex recursive ZK proofs.
 
 Near is a chain abstraction layer with a very strong consensus. Through its Multichain technology, it allows developers to push TXs in any chain through their Near contract. However, computation is limited on the Near network, and it is not an ideal solution to store all data associated with ZK proof verification in a Near contract.
 
@@ -44,7 +44,7 @@ Octopus implements verifier nodes as nodeJS servers that can access o1js and Nea
 
 Details of the diagram are explained below
 
-![Octopus Layer Architecture](./architecture.png)
+![Octopus Layer Architecture](../architecture.png)
 
 ## Architecture Parts
 
