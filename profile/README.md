@@ -8,6 +8,12 @@ The layer is implemented as a light and censorship resistant network, thus provi
 
 As Near is very strong as a consensus and settlement layer, Near Multichain creates the perfect way of distributing settled proof verifications across the blockchain.
 
+**Contract Addresses:**
+
+[Near Verification Contract Testnet](https://testnet.nearblocks.io/txns/7FzGA2PLAtpBxiSLZKjZ4xN88ibEkGiPmc3Rrqix7SzL)
+
+[Near Application Contract Testnet](https://testnet.nearblocks.io/txns/7fWvas97xAyu9YoVWhkgDRSRVw2H4XwF48sB4orkZ6Xr) 
+
 ## Background
 
 ZK snark proofs are the only way of providing fully on chain privacy in constant verification time. However, the proof generation time and the proof size depends on the input.
