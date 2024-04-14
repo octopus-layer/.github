@@ -8,13 +8,13 @@ The layer is implemented as a light and censorship resistant network, thus provi
 
 As Near is very strong as a consensus and settlement layer, Near Multichain creates the perfect way of distributing settled proof verifications across the blockchain.
 
+## Background
+Decentralized networks strive to provide full privacy but face challenges without the use of Zero-Knowledge Succinct Non-interactive Argument of Knowledge (ZK-SNARK) proofs. These proofs, though effective, are complex and expensive to generate. The integration of ZK-SNARK proofs, particularly in decentralized networks such as the Mina blockchain, involves significant transaction (TX) costs due to the size of the proofs, despite their constant verification time. To mitigate these issues, proof aggregation techniques have been developed. These techniques involve recursively combining multiple ZK proofs into a single proof, which can be verified in constant time without increasing time costs. The o1js framework, a JavaScript (JS) based ZK-SNARK proof generation framework available as an npm package, facilitates the creation of these complex recursive proofs efficiently using Plonk proofs atop a layer called Pickles, which supports proof recursion.
+
 ## Problem Overview
 
-Decentralized networks cannot provide full privacy without using ZK snark proofs. However, ZK snark proofs are quite complex to integrate and often costly to generate. Moreover, even though the verification time of a snark proof is always constant, the proof size may increase TX costs significantly. In order to solve this issue, a method called proof aggregation can be utilized, where multiple ZK proofs are recursively combined together and proved at once. As ZK snark proofs are always verified in constant time, recursively combining proofs do not increase time costs. However, aggregated proof generation takes significant time in the client side, and thus affects the UX of a ZK application.
+While proof aggregation presents a solution to the challenges of integrating ZK-SNARK proofs, it introduces new problems, particularly in user experience (UX). The generation of aggregated proofs requires significant computation time on the client side, which can adversely affect the UX of applications using ZK technology. Furthermore, the Near network, despite offering a robust consensus mechanism through its Multichain technology, poses limitations on computation. This limitation makes it suboptimal for storing extensive data associated with ZK proof verification in Near contracts, thereby complicating the implementation of decentralized applications that require efficient transaction processing across different blockchain networks.
 
-o1js is a ZK snark proof generation framework in JS ([npm package](https://www.npmjs.com/package/o1js)) commonly used in the Mina blockchain. As it is essentially JS, it can be used in all machines supporting wasm. Moreover, o1js uses Plonk proofs on top of a layer called Pickles, which is responsible for proof recursion. As a result, proof aggregation is much more efficient in o1js. Developers may easily use o1js to create complex recursive ZK proofs.
-
-Near is a chain abstraction layer with a very strong consensus. Through its Multichain technology, it allows developers to push TXs in any chain through their Near contract. However, computation is limited on the Near network, and it is not an ideal solution to store all of the data associated with a ZK proof verification in a Near contract.
 
 ## Solution
 
@@ -22,11 +22,11 @@ Instead of directly verifying ZK snark proofs in Near, Octopus implements a ligh
 
 Verifier nodes are implemented as nodeJS servers that can access o1js and Near at the same time. The details of these verification nodes are as following:
 
-- They are responsible for verifying o1js proofs and signing proofs public output with their Near private key. As snark proof verification has constant time complexity, this process is very light, thus making these nodes light as well: Octopus verifier nodes can be installed in machines with **1 core and 2 GB ram**.
+- They are responsible for verifying o1js proofs and signing proofs public output with their Near private key. As snark proof verification has constant time complexity, this process is very light, thus making these nodes light as well: Octopus verifier nodes can be installed in machines with **1 core and 2 GB RAM**.
 
 - The motivation of nodes is to sign a new coming proof as fast as possible and settle it in Near once 66% of all possible signatures are gathered (66% as a common prevention against possible majority attack vectors).
 
-- Instead of every node signing and settling on Near one by one, it is enough **only 1 node** to send a settlement TX on Near with 66% of signatures. This decreases computation costs on Near significantly and optimize the usage of the consensus.
+- Instead of every node signing and settling on Near one by one, it is enough **only one node** to send a settlement TX on Near with 66% of signatures. This decreases computation costs on Near significantly and optimize the usage of the consensus.
 
 - Nevertheless, nodes do not compete to settle the proof, as all nodes that provided a signature during the settlement are **rewarded equally** once the settlement is complete. This makes the need of a consensus layer inside Octopus dissapear.
 
@@ -34,7 +34,7 @@ Verifier nodes are implemented as nodeJS servers that can access o1js and Near a
 
 - Moreover, nodes do not need to store anything. The URL of other nodes is provided from the Near contract. In a way, Near contract acts as a **communication layer** between the verifier nodes of Octopus. As a result, there is **no synchronization** during the installation of a new Octopus verifier node.
 
-- The layer is instantinated with an initial set of verifier nodes, but anyone can instantly join or leave the network. In order to join the network, you need 66% signatures of current verifier nodes. An additional incentivization mechanism can be provided here to make sure the node count never goes below a certain level.
+- The layer is instantiated with an initial set of verifier nodes, but anyone can instantly join or leave the network. In order to join the network, you need 66% signatures of current verifier nodes. An additional incentivization mechanism can be provided here to make sure the node count never goes below a certain level.
 
 - As a result of all these properties, Octopus nodes can be installed in a browser during the usage of an decentralized application, just like a data availability chain, to provide 100% **censorship resistant proof verification**.
 
@@ -54,7 +54,7 @@ Details of the diagram are explained below
 
 ### Verifier Node
 
-`Verifier Node` is a nodeJS light server that can be deployed anywhere. It communicates with other `Verifier Node`s through their public URL, which is provided by Near (to achieve full liveness in the system). It is job is to verify an o1js proof by asserting it to the public input in the `Application Contract`, and then signing the proof with its Near private key.
+`Verifier Node` is a nodeJS light server that can be deployed anywhere. It communicates with other `Verifier Node`s through their public URL, which is provided by Near (to achieve full liveness in the system). Its job is to verify an o1js proof by asserting it to the public input in the `Application Contract`, and then signing the proof with its Near private key.
 
 Once a proof is signed, it is gossiped to other `Verifier Node`s in the layer or settled in Near if 66% of the list is achieved.
 
@@ -78,7 +78,7 @@ Here, we decribe the process of the deployment of a private dApp on top of Near 
 
 1. First, a developer uses o1js to create ZKPs needed in its dApp. As Near also supports JS for smart contract creation, this is very convenient for Near developers.
 
-2. Then, we compile the ZK proof is compiled and obtain the verification key of the proof locally. We add the verification key of the proof in our `Application Contract` during the deployment. If the ZK proof is changed, then the verification key kept on Near should be as well.
+2. Then, we compile the ZK proof and obtain the verification key of the proof locally. We add the verification key of the proof in our `Application Contract` during the deployment. If the ZK proof is changed, then the verification key kept on Near should be as well.
 
 3. In the example of whistleblower, we need to verify that some set of `{email, password}` pair's hash is in a certain list. By asserting the hash of this pair to be in the on chain pair, we make sure that only authenticated users can submit a message, without revealing who in the set sent the message at all.
 
@@ -90,7 +90,7 @@ Here, we decribe the process of the deployment of a private dApp on top of Near 
 
 ## Process for Interaction
 
-Here, we decribe how a user interacts with a Near dApp using Octopus layer for privacy. Again, we continue with the example of whistleblower application.
+Here, we describe how a user interacts with a Near dApp using Octopus layer for privacy. Again, we continue with the example of whistleblower application.
 
 1. The user provides their `{email, password}` pair and generate a ZK snark proof. The proof configuration is as following:
 
@@ -102,7 +102,7 @@ Here, we decribe how a user interacts with a Near dApp using Octopus layer for p
 
 2. Then, user receives the location of Octopus `Verifier Node`s from the Near `Verifier Contract`. It submits a ZK verification TX to any of these nodes (or all of them at once, this does not affect the architecture).
 
-3. Once a `Verifier Node` receives a proof, it verifies its correctness by asserting on the public input. The trustless public input is obtained from the `Application Contract` in the Near. This makes these proofs to be considered as verified in the Near.
+3. Once a `Verifier Node` receives a proof, it verifies its correctness by asserting on the public input. The trustless public input is obtained from the `Application Contract` on Near. This makes these proofs to be considered as verified in the Near.
 
 4. It is also important to verify the verification key of the proof to match the signature stored in the `Application Contract`. Once the verification key and the public input is matched, there is no more doubt on the public output of the prooof.
 
@@ -114,7 +114,7 @@ Here, we decribe how a user interacts with a Near dApp using Octopus layer for p
 
 ## Process for Adding a New `Verifier Node`
 
-This process is completely seperate from the example whistleblower application. It describes how new nodes are included in the state of the `Verifier Contract`.
+This process is completely separate from the example whistleblower application. It describes how new nodes are included in the state of the `Verifier Contract`.
 
 1. The new `Verifier Node` installs the nodeJS application on its device and starts the server.
 
