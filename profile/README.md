@@ -9,14 +9,24 @@ The layer is implemented as a light and censorship resistant network, thus provi
 As Near is very strong as a consensus and settlement layer, Near Multichain creates the perfect way of distributing settled proof verifications across the blockchain.
 
 ## Background
-Decentralized networks strive to provide full privacy but face challenges without the use of Zero-Knowledge Succinct Non-interactive Argument of Knowledge (ZK-SNARK) proofs. These proofs, though effective, are complex and expensive to generate. The integration of ZK-SNARK proofs, particularly in decentralized networks such as the Mina blockchain, involves significant transaction (TX) costs due to the size of the proofs, despite their constant verification time. To mitigate these issues, proof aggregation techniques have been developed. These techniques involve recursively combining multiple ZK proofs into a single proof, which can be verified in constant time without increasing time costs. The o1js framework, a JavaScript (JS) based ZK-SNARK proof generation framework available as an npm package, facilitates the creation of these complex recursive proofs efficiently using Plonk proofs atop a layer called Pickles, which supports proof recursion.
+
+ZK snark proofs are the only way of providing fully on chain privacy in constant verification time. However, the proof generation time and the proof size depends on the input.
+
+o1js is a ZK snark proof generation framework in JS ([npm package](https://www.npmjs.com/package/o1js)) commonly used in the Mina blockchain. As it is essentially JS, it can be used in all machines supporting wasm. Moreover, o1js uses Plonk proofs on top of a layer called Pickles, which is responsible for proof recursion. As a result, proof aggregation is much more efficient in o1js. Developers may easily use o1js to create complex recursive ZK proofs.
+
+Near is a chain abstraction layer with a very strong consensus. Through its Multichain technology, it allows developers to push TXs in any chain through their Near contract. However, computation is limited on the Near network, and it is not an ideal solution to store all of the data associated with a ZK proof verification in a Near contract.
 
 ## Problem Overview
 
-While proof aggregation presents a solution to the challenges of integrating ZK-SNARK proofs, it introduces new problems, particularly in user experience (UX). The generation of aggregated proofs requires significant computation time on the client side, which can adversely affect the UX of applications using ZK technology. Furthermore, the Near network, despite offering a robust consensus mechanism through its Multichain technology, poses limitations on computation. This limitation makes it suboptimal for storing extensive data associated with ZK proof verification in Near contracts, thereby complicating the implementation of decentralized applications that require efficient transaction processing across different blockchain networks.
+Decentralized networks cannot provide full privacy without using ZK snark proofs. However, ZK snark proofs are quite complex to integrate and often costly to generate. Moreover, even though the verification time of a snark proof is always constant, the proof size may increase TX costs significantly.
 
+In order to solve this issue, a method called proof aggregation can be utilized, where multiple ZK proofs are recursively combined together and proved at once. As ZK snark proofs are always verified in constant time, recursively combining proofs do not increase time costs. However, aggregated proof generation takes significant time in the client side, and thus affects the UX of a ZK application. Common ZK snark proof generation technologies are usually not usable with proof aggregation.
+
+Combined with the limited computation power inside Near contracts and the complex underlying structure of proof verification, it becomes very difficult to provide on chain privacy on Near.
 
 ## Solution
+
+**Important:** Please note that for now, only the proof of concept of the project is ready and not all of the functionality is implemented. However, the most important part of the architecture, Octopus layer verifier nodes are fully available for usage.
 
 Instead of directly verifying ZK snark proofs in Near, Octopus implements a light o1js proof verification layer on top of Near. This layer is made up of light verifier nodes.
 
@@ -129,6 +139,8 @@ This process is completely separate from the example whistleblower application. 
 ## Next Steps & Improvements
 
 Some possible missing points and improvements on the system are as following:
+
+- The Multichain part is not fully implemented yet and not working as expected. It should be finished before this project is fully ready.
 
 - As this is a proof of concept project, the incentivization of `Verifier Node`s is not implemented. It should be added as described in the architecture.
 
