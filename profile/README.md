@@ -44,7 +44,7 @@ Octopus implements verifier nodes as nodeJS servers that can access o1js and Nea
 
 Details of the diagram are explained below
 
-![Octopus Layer Architecture](../architecture.png)
+![Octopus Layer Architecture](./architecture.png)
 
 ## Architecture Parts
 
