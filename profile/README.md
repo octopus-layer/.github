@@ -6,7 +6,7 @@ Octopus creates a decentralized and censorship resistant verification layer for 
 
 The layer is implemented as a light and censorship resistant network, thus provides proof availability when integrated into a blockchain.
 
-As Near is very strong as a consensus and settlement layer, Near Multichain creates the perfect way of distributing settled proof verifications accross the blockchain.
+As Near is very strong as a consensus and settlement layer, Near Multichain creates the perfect way of distributing settled proof verifications across the blockchain.
 
 ## Problem Overview
 
