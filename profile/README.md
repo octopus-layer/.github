@@ -10,7 +10,7 @@ As Near is very strong as a consensus and settlement layer, Near Multichain crea
 
 **Contract Addresses:**
 
-[Near Verification Contract Testnet](https://testnet.nearblocks.io/txns/7FzGA2PLAtpBxiSLZKjZ4xN88ibEkGiPmc3Rrqix7SzL)
+[Near Verification Contract Testnet](https://testnet.nearblocks.io/txns/W4JgvE8ymnk9gAChu4SKLjNCTrB6CjQLgPSjqsnrZ4D)
 
 [Near Application Contract Testnet](https://testnet.nearblocks.io/txns/7fWvas97xAyu9YoVWhkgDRSRVw2H4XwF48sB4orkZ6Xr) 
 
